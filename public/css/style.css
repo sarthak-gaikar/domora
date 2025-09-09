@@ -1,0 +1,353 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure the body takes full height */
+}
+
+.container {
+    flex: 1; /* Allow the container to grow and fill the available space */
+}
+
+    /* Navbar container */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 30px;
+    border-bottom: 1px solid #ddd;
+    background: white;
+    height: 50px;
+    position: sticky;    /* Or use fixed if you want it always visible */
+    top: 0;              /* Stick to top of page */
+    z-index: 1000;       /* Make sure it stays above other elements */
+    background: white;   /* Prevent content from showing through */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Optional shadow for depth */
+}
+    /* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 22px;
+    font-weight: bold;
+    color: #ff385c;
+}
+
+.logo i {
+    height: 26px;
+    margin-right: 8px;
+}
+
+/* Search Bar */
+.search-bar {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 30px;
+    padding: 5px 10px;
+    gap: 10px;
+    font-size: 14px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar span {
+    padding: 0 10px;
+    border-right: 1px solid #ddd;
+}
+
+.search-bar span:last-child {
+    border-right: none;
+}
+
+.search-icon {
+    background: #ff385c;
+    border-radius: 50%;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-right: -3px;
+}
+
+.search-icon img {
+    width: 14px;
+    height: 14px;
+    filter: invert(1);
+}
+
+/* Right Menu */
+.right-menu {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 14px;
+}
+
+.menu-icon, .globe-icon {
+    background: #f5f5f5;
+    border-radius: 50%;
+    padding: 8px;
+    cursor: pointer;
+    
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 15px 30px;
+    font-size: 14px;
+    border-top: 1px solid #ddd;
+    flex-wrap: wrap;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Optional shadow for depth */
+
+}
+
+.footer a {
+    margin: 0 8px;
+    color: #222;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+.footer-left,
+.footer-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.footer-right i {
+    font-size: 16px;
+}
+
+.property-card {
+    width: 250px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+    /* box-shadow: 0 2px 6px rgba(0,0,0,0.1); */
+    font-family: Arial, sans-serif;
+    transition: transform 0.2s;
+}
+
+.property-card:hover {
+    transform: scale(1.01);
+}
+
+.card-image {
+    position: relative;
+}
+
+.card-image img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 1rem;
+}
+
+.badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.wishlist-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #222;
+    cursor: pointer;
+}
+
+.card-info {
+    padding: 10px;
+}
+
+.card-info h3 {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.card-info p {
+    margin: 5px 0;
+    color: #555;
+    font-size: 14px;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    gap: 4px;
+    color: #222;
+}
+
+.rating i {
+    color: #FF385C;
+}
+
+.listing-container {
+    display: flex;
+    flex-wrap: wrap;       /* Allows cards to wrap into rows */
+    gap: 10px;             /* Space between cards */
+    justify-content: center; /* Center the cards horizontally */
+    padding: 20px;
+}
+
+.title {
+    font-size: 24px;
+    margin: 20px 0;
+    margin-left: 30px;
+    color: #222;
+}
+
+.listing-form {
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* margin-top: 50px; */
+    max-width: 60%;
+    margin: 30px auto;
+    background: #fff;
+    padding: 10px 25px 20px 25px;
+    border-radius: 12px;
+    /* box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); */
+    font-family: 'Arial', sans-serif;
+}
+
+.listing-form label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.listing-form input,
+.listing-form textarea {
+    width: 100%;
+    padding: 12px;
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s ease;
+    
+}
+
+.listing-form input:focus,
+.listing-form textarea:focus {
+    border-color: #ff385c; /* Airbnb pink/red */
+    /* box-shadow: 0 0 0 2px rgba(255, 56, 92, 0.2); */
+}
+
+.listing-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.btn-primary {
+    background-color: #ff385c;
+    color: white;
+    padding: 12px 18px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 400;
+}
+
+.btn-primary:hover {
+    background-color: #e03150;
+}
+
+/* Show */
+
+.listing-show {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    /* box-shadow: 0 4px 20px rgba(0,0,0,0.08); */
+    font-family: 'Arial', sans-serif;
+}
+
+.listing-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.listing-header h4 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.listing-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-btn {
+    background-color: #F0F0F0;
+    color: #ff385c;
+    padding: 8px 14px;
+    font-size: 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.edit-btn:hover {
+    background-color: #ff5a5f;
+    color: white;
+}
+
+.del-btn {
+    /* background: none; */
+    background-color: #F0F0F0;
+    color: #ff5a5f;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.del-btn:hover {
+    background-color: #ff5a5f;
+    color: white;
+}
+
+.delete-form {
+    margin: 0;
+}
+
+.listing-show img {
+    width: 100%;
+    height: auto;
+    border-radius: 1rem;
+}
