@@ -40,8 +40,6 @@
         <p class="location"><%= listing.location %></p>
         <img src="<%= listing.image.url %>" alt="<%= listing.title %>">
         <p class="description"><%= listing.description %></p>
-        <p class="price">Price: &#8377; <%= listing.price.toLocaleString("en-IN") %> for a night</p>
-        
+        <p class="price">Price: &#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %> for a night</p>
     </div>
 </body>
-
