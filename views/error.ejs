@@ -1,0 +1,11 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<div class="container" style="max-width: 700px; margin: 4rem auto; text-align: center;">
+    <h1 style="font-size: 2.5rem; color: #dc3545; margin-bottom: 1rem;">
+        <%= statusCode %> Error
+    </h1>
+    <p style="font-size: 1.2rem; color: #555; margin-bottom: 2rem;">
+        <%= message || "Something went wrong. Please try again." %>
+    </p>
+    <a href="/listings" class="btn-primary">Back to Listings</a>
+</div>
