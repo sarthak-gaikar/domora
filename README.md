@@ -3,7 +3,6 @@
 [![Node.js](https://img.shields.io/badge/Node.js-339933?logo=node.js&logoColor=white)](https://nodejs.org/) 
 [![Express](https://img.shields.io/badge/Express.js-000000?logo=express&logoColor=white)](https://expressjs.com/) 
 [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/) 
-[![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
 A full-stack web application built with **Node.js, Express, MongoDB, and EJS** that allows users to create, edit, view, and manage property or product listings.  
 
