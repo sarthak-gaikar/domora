@@ -36,6 +36,18 @@ const Listing = require("./models/listing");
 const wrapAsync = require("./utils/wrapAsync");
 const ExpressError = require("./utils/ExpressError");
 
+// Schema for server-side validation
+const { listingSchema } = require("./schema.js");
+
+const validateListing = (req, res, next) => {
+    const { error } = listingSchema.validate(req.body);
+    if (error) {
+        throw new ExpressError(400, error);
+    } else {
+        next();
+    }
+}
+
 // ==========================
 // Database Connection
 // ==========================
@@ -72,10 +84,13 @@ app.get('/listings/new', (req, res) => {
 });
 
 // Create Route - Add Listing
-app.post('/listings', wrapAsync(async (req, res, next) => {
-    if (!req.body.listing) {
-        throw new ExpressError(400, "Invalid Listing Data");
+app.post('/listings', validateListing, wrapAsync(async (req, res, next) => {
+    let result = listingSchema.validate(req.body);
+    console.log("Validation Result:", result);
+    if (result.error) {
+        throw new ExpressError(400, result.error);
     }
+
     const { title, description, image = {}, price, location, country } = req.body;
     const newListing = new Listing({
         title,
@@ -127,7 +142,7 @@ app.get('/listings/:id/edit', wrapAsync(async (req, res, next) => {
 
 
 // Update Route - Apply Edits to Listing
-app.put('/listings/:id', wrapAsync(async (req, res) => {
+app.put('/listings/:id', validateListing, wrapAsync(async (req, res) => {
     // if (!req.body.listing) {
     //     throw new ExpressError(400, "Invalid Listing Data");
     // }
