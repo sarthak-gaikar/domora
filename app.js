@@ -31,16 +31,26 @@ app.engine("ejs", ejsMate);
 
 // Models
 const Listing = require("./models/listing");
+const Review = require("./models/reviews");
 
 // Utilities
 const wrapAsync = require("./utils/wrapAsync");
 const ExpressError = require("./utils/ExpressError");
 
 // Schema for server-side validation
-const { listingSchema } = require("./schema.js");
+const { listingSchema, reviewSchema } = require("./schema.js");
 
 const validateListing = (req, res, next) => {
     const { error } = listingSchema.validate(req.body);
+    if (error) {
+        throw new ExpressError(400, error);
+    } else {
+        next();
+    }
+}
+
+const validateReview = (req, res, next) => {
+    const { error } = reviewListing.validate(req.body);
     if (error) {
         throw new ExpressError(400, error);
     } else {
@@ -95,10 +105,7 @@ app.post('/listings', validateListing, wrapAsync(async (req, res, next) => {
     const newListing = new Listing({
         title,
         description,
-        image: {
-            filename: image.filename || 'listingimage',
-            url: image.url || "https://plus.unsplash.com/premium_vector-1721890983105-625c0d32045f?..."
-        },
+        image: typeof image === 'string' ? image : image.url || image, // <-- forces string
         price,
         location,
         country
@@ -115,7 +122,7 @@ app.post('/listings', validateListing, wrapAsync(async (req, res, next) => {
 // Show Route - Single Listing
 app.get('/listings/:id', wrapAsync(async (req, res) => {
     let { id } = req.params;
-    const listing = await Listing.findById(id);
+    const listing = await Listing.findById(id).populate('reviews');
 
     if (!listing) {
         return res.status(404).send("Listing not found");
@@ -147,15 +154,12 @@ app.put('/listings/:id', validateListing, wrapAsync(async (req, res) => {
     //     throw new ExpressError(400, "Invalid Listing Data");
     // }
     let { id } = req.params;
-    const { title, description, image = {}, price, location, country } = req.body;
+    const { title, description, image, price, location, country } = req.body;
 
     const updatedListing = await Listing.findByIdAndUpdate(id, {
         title,
         description,
-        image: {
-            filename: 'listingimage',
-            url: image.url || "https://plus.unsplash.com/premium_vector-1721890983105-625c0d32045f?..."
-        },
+        image,
         price,
         location,
         country
@@ -165,11 +169,43 @@ app.put('/listings/:id', validateListing, wrapAsync(async (req, res) => {
     res.redirect(`/listings/${updatedListing._id}`);
 }));
 
+// Reviews Routes
+// Create Route - Add Review to Listing
+app.post('/listings/:id/reviews' , wrapAsync(async (req, res) => {
+    let { id } = req.params;
+    const { rating, comment } = req.body;
+
+    const listing = await Listing.findById(id);
+    if (!listing) throw new ExpressError(404, "Listing not found");
+
+    // Create a Review document
+    const review = new Review({ rating, comment });
+    console.log("New Review:", review);
+    await review.save();
+
+    // Push review's ObjectId
+    listing.reviews.push(review);
+    console.log("Updated Listing with new review:", listing);
+    await listing.save();
+
+    res.redirect(`/listings/${id}`);
+}))
+
+// Delete Review Route - Remove Review from Listing
+app.delete('/listings/:id/reviews/:reviewId', wrapAsync(async (req, res) => {
+    let { id, reviewId } = req.params;
+    await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId }});
+    await Review.findByIdAndDelete(reviewId);
+    console.log(`Deleted review ${reviewId} from listing ${id}`);
+
+    res.redirect(`/listings/${id}`);
+}))
+
 // Delete Route - Remove Listing
 app.delete('/listings/:id', wrapAsync(async (req, res) => {
     let { id } = req.params;
-    const deltedLsitng = await Listing.findByIdAndDelete(id);
-    console.log("Deleted listing:", deltedLsitng);  
+    const deletedListing = await Listing.findByIdAndDelete(id);
+    console.log("Deleted listing:", deletedListing);  
     res.redirect('/listings');  
 }));
 

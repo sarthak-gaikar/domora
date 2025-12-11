@@ -38,8 +38,37 @@
         </div>
 
         <p class="location"><%= listing.location %></p>
-        <img src="<%= listing.image.url %>" alt="<%= listing.title %>">
+        <img src="<%= listing.image || 'https://via.placeholder.com/800x600.png?text=No+Image' %>" alt="<%= listing.title %>">
         <p class="description"><%= listing.description %></p>
         <p class="price">Price: &#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %> for a night</p>
+    </div>
+    <div class="rating-form">
+        <h3>Leave a Review</h3>
+        <form action="/listings/<%= listing._id %>/reviews" method="POST" class="needs-validation" novalidate>
+            <label for="rating">Rating:</label>
+            <input type="range" id="rating" name="rating" min="1" max="5" oninput="this.nextElementSibling.value = this.value">
+            <label for="comment">Comment:</label>
+            <textarea name="comment" rows="4" placeholder="Write your comment here..." required></textarea>
+            <button type="submit" class="submit-btn">Submit Review</button>
+        </form>
+    </div>
+    <div class="ratings">
+        <h3 class="reviews-heading">Reviews</h3>
+<% if (listing.reviews && listing.reviews.length > 0) { %>
+    <div class="reviews-grid">
+        <% listing.reviews.forEach(review => { %>
+            <div class="review-card">
+                <p class="review-user"><b><i>User</i></b></p>
+                <p class="review-rating">Rating: <%= review.rating %>/5</p>
+                <p class="review-comment"><%= review.comment %></p>
+                <p class="review-date">Reviewed on: <%= new Date(review.createdAt).toLocaleDateString() %></p>
+                <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"><button class="del-btn">Delete</button></form>
+            </div>
+        <% }) %>
+    </div>
+<% } else { %>
+    <p class="no-reviews">No reviews yet. Be the first to review!</p>
+<% } %>
+
     </div>
 </body>

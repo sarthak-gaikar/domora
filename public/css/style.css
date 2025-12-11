@@ -338,3 +338,136 @@ a {
     height: auto !important;
     border-radius: 1rem !important;
 }
+
+/* Rating Form */
+.rating-form {
+    max-width: 800px !important;
+    margin: 0px auto !important;
+    /* background: #fff !important; */
+    /* padding: 10px 25px !important; */
+    /* border-radius: 12px !important; */
+    /* box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important; */
+    margin-bottom: 15px !important;
+}
+
+.rating-form h3 {
+    font-size: 20px !important;
+    margin-bottom: 15px !important;
+    color: #222 !important;
+    font-weight: 600 !important;
+}
+
+.rating-form label {
+    font-weight: 600 !important;
+    display: block !important;
+    margin: 12px 0 6px !important;
+}
+
+.rating-form textarea {
+    width: 100% !important;
+    padding: 12px !important;
+    border-radius: 8px !important;
+    border: 1px solid #ddd !important;
+    font-size: 15px !important;
+    resize: vertical !important;
+    transition: border-color 0.2s ease !important;
+}
+
+.rating-form textarea:focus {
+    border-color: #ff385c !important;
+}
+
+.rating-input {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    margin-bottom: 18px !important;
+}
+
+.rating-input input[type="range"] {
+    flex: 1 !important;
+    accent-color: #ff385c !important; /* Modern browsers */
+    cursor: pointer !important;
+}
+
+.rating-input output {
+    min-width: 24px !important;
+    text-align: center !important;
+    font-weight: 600 !important;
+    color: #ff385c !important;
+}
+
+.submit-btn {
+    background-color: #ff385c !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 12px 20px !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    transition: background 0.2s ease !important;
+    margin-top: 10px;
+}
+
+.submit-btn:hover {
+    background-color: #e03150 !important;
+}
+
+.ratings {
+    margin-top: 2rem !important;
+    padding: 1rem !important;
+    margin: 0px auto 30px auto !important;
+    max-width: 800px !important;
+}
+
+/* Grid layout for reviews */
+.reviews-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)) !important;
+    gap: 1rem !important;
+}
+
+.reviews-heading {
+    font-size: 1.5rem !important;
+    margin-bottom: 1rem !important;
+    color: #333 !important;
+    border-bottom: 2px solid #ddd !important;
+    padding-bottom: 0.5rem !important;
+}
+
+.review-card {
+    background: #fff !important;
+    border: 1px solid #eee !important;
+    border-radius: 10px !important;
+    padding: 1rem !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+/* .review-card:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12) !important;
+} */
+
+.review-rating {
+    font-weight: bold !important;
+    color: #444 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.review-comment {
+    margin: 0.5rem 0 !important;
+    font-style: italic !important;
+    color: #555 !important;
+}
+
+.review-date {
+    font-size: 0.85rem !important;
+    color: #888 !important;
+}
+
+.no-reviews {
+    font-style: italic !important;
+    color: #666 !important;
+    padding: 0.5rem !important;
+}

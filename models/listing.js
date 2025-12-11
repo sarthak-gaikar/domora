@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Review = require("./reviews");
 
 // Creating Schema
 const listingSchema = new Schema ({
@@ -9,14 +10,11 @@ const listingSchema = new Schema ({
     },
     description: String,
     image: {
-    filename: { type: String, default: 'listingimage' },
-    url: { 
         type: String,
         default: "https://plus.unsplash.com/premium_vector-1721890983105-625c0d32045f?...",
         set: (v) => v === "" 
             ? "https://plus.unsplash.com/premium_vector-1721890983105-625c0d32045f?..." 
             : v
-        }
     },
     price: {
         type: Number,
@@ -25,6 +23,20 @@ const listingSchema = new Schema ({
     },
     location: String,
     country: String,
+    reviews: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Review"
+        }
+    ]
+})
+
+// Delete associated reviews when a listing is deleted
+listingSchema.post("findOneAndDelete", async(listing) => {
+    if(listing) {
+        await Review.deleteMany({ _id: { $in: listing.reviews } });
+    }
+    console.log("Associated reviews deleted for listing:", listing._id);
 })
 
 // Creating Model
