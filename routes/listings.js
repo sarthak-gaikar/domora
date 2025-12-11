@@ -1,0 +1,122 @@
+const express = require("express");
+const router = express.Router();
+
+// Utilities
+const wrapAsync = require("../utils/wrapAsync");
+const ExpressError = require("../utils/ExpressError");
+
+// Schema for server-side validation
+const { listingSchema, reviewSchema } = require("../schema.js");
+
+// Models
+const Listing = require("../models/listing");
+
+const validateListing = (req, res, next) => {
+    const { error } = listingSchema.validate(req.body);
+    if (error) {
+        throw new ExpressError(400, error);
+    } else {
+        next();
+    }
+}
+
+// Mongoose
+const mongoose = require("mongoose");
+const MONGO_URL = "mongodb://127.0.0.1:27017/domora";
+
+// Index Route - All Listings
+router.get('/', wrapAsync(async (req, res) => { 
+    const allListings = await Listing.find({});
+    res.render("./listings/index.ejs", { allListings });
+}));
+
+// New Route - Form to Create Listing
+router.get('/new', (req, res) => {
+    res.render("./listings/new.ejs");
+});
+
+// Create Route - Add Listing
+router.post('/', validateListing, wrapAsync(async (req, res, next) => {
+    let result = listingSchema.validate(req.body);
+    console.log("Validation Result:", result);
+    if (result.error) {
+        throw new ExpressError(400, result.error);
+    }
+
+    const { title, description, image = {}, price, location, country } = req.body;
+    const newListing = new Listing({
+        title,
+        description,
+        image: typeof image === 'string' ? image : image.url || image, // <-- forces string
+        price,
+        location,
+        country
+    });
+
+    console.log('New Listing:', newListing);
+    await newListing.save();
+    console.log("New listing saved to DB:", newListing);
+
+    res.redirect('/listings');
+})  
+);
+
+// Show Route - Single Listing
+router.get('/:id', wrapAsync(async (req, res) => {
+    let { id } = req.params;
+    const listing = await Listing.findById(id).populate('reviews');
+
+    if (!listing) {
+        return res.status(404).send("Listing not found");
+    }
+
+    res.render("./listings/show.ejs", { listing });
+}));
+
+// Edit Route - Form to Edit Listing
+router.get('/:id/edit', wrapAsync(async (req, res, next) => {
+    let { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new ExpressError(400, "Invalid Listing ID");
+    }
+
+    const listing = await Listing.findById(id);
+    if (!listing) {
+        throw new ExpressError(404, "Listing not found");
+    }
+
+    res.render("listings/edit", { listing });
+}));
+
+
+// Update Route - Apply Edits to Listing
+router.put('/:id', validateListing, wrapAsync(async (req, res) => {
+    // if (!req.body.listing) {
+    //     throw new ExpressError(400, "Invalid Listing Data");
+    // }
+    let { id } = req.params;
+    const { title, description, image, price, location, country } = req.body;
+
+    const updatedListing = await Listing.findByIdAndUpdate(id, {
+        title,
+        description,
+        image,
+        price,
+        location,
+        country
+    });
+
+    console.log("Updated listing:", updatedListing);
+    res.redirect(`/listings/${updatedListing._id}`);
+}));
+
+// Delete Route - Remove Listing
+router.delete('/:id', wrapAsync(async (req, res) => {
+    let { id } = req.params;
+    const deletedListing = await Listing.findByIdAndDelete(id);
+    console.log("Deleted listing:", deletedListing);  
+    res.redirect('/listings');  
+}));
+
+module.exports = router;
