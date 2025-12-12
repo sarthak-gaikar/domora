@@ -7,6 +7,25 @@ const express = require("express");
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 
+// Express-Session
+const session = require("express-session");
+const sessionConfig = {
+    secret: "secret",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+    },
+};
+
+app.use(session(sessionConfig));
+
+// Flash
+const flash = require("connect-flash");
+app.use(flash());
+
 // Path
 const path = require("path");
 
@@ -28,6 +47,13 @@ app.use(express.static(path.join(__dirname, "public")));
 // EJS-Mate (for layouts/partials)
 const ejsMate = require("ejs-mate");
 app.engine("ejs", ejsMate);
+
+// Flash Middleware
+app.use((req, res, next) => {
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    next();
+});
 
 // Routes
 const listings = require("./routes/listings.js")

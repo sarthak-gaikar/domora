@@ -56,7 +56,7 @@ router.post('/', validateListing, wrapAsync(async (req, res, next) => {
     console.log('New Listing:', newListing);
     await newListing.save();
     console.log("New listing saved to DB:", newListing);
-
+    req.flash('success', 'New listing created successfully!');
     res.redirect('/listings');
 })  
 );
@@ -67,7 +67,8 @@ router.get('/:id', wrapAsync(async (req, res) => {
     const listing = await Listing.findById(id).populate('reviews');
 
     if (!listing) {
-        return res.status(404).send("Listing not found");
+        req.flash('error', 'Listing not found!');
+        return res.redirect('/listings');
     }
 
     res.render("./listings/show.ejs", { listing });
@@ -83,7 +84,8 @@ router.get('/:id/edit', wrapAsync(async (req, res, next) => {
 
     const listing = await Listing.findById(id);
     if (!listing) {
-        throw new ExpressError(404, "Listing not found");
+        req.flash('error', 'Listing not found!');
+        return res.redirect('/listings');
     }
 
     res.render("listings/edit", { listing });
@@ -108,6 +110,7 @@ router.put('/:id', validateListing, wrapAsync(async (req, res) => {
     });
 
     console.log("Updated listing:", updatedListing);
+    req.flash('success', 'Listing updated successfully!');
     res.redirect(`/listings/${updatedListing._id}`);
 }));
 
@@ -116,6 +119,7 @@ router.delete('/:id', wrapAsync(async (req, res) => {
     let { id } = req.params;
     const deletedListing = await Listing.findByIdAndDelete(id);
     console.log("Deleted listing:", deletedListing);  
+    req.flash('success', 'Listing deleted successfully!');
     res.redirect('/listings');  
 }));
 

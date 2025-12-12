@@ -16,15 +16,6 @@ const Review = require("../models/reviews");
 const mongoose = require("mongoose");
 const MONGO_URL = "mongodb://127.0.0.1:27017/domora";
 
-const validateListing = (req, res, next) => {
-    const { error } = listingSchema.validate(req.body);
-    if (error) {
-        throw new ExpressError(400, error);
-    } else {
-        next();
-    }
-}
-
 const validateReview = (req, res, next) => {
     const { error } = reviewListing.validate(req.body);
     if (error) {
@@ -53,6 +44,7 @@ router.post('/' , wrapAsync(async (req, res) => {
     console.log("Updated Listing with new review:", listing);
     await listing.save();
 
+    req.flash('success', 'Review added successfully!');
     res.redirect(`/listings/${id}`);
 }))
 
@@ -63,6 +55,7 @@ router.delete('/:reviewId', wrapAsync(async (req, res) => {
     await Review.findByIdAndDelete(reviewId);
     console.log(`Deleted review ${reviewId} from listing ${id}`);
 
+    req.flash('success', 'Review deleted successfully!');
     res.redirect(`/listings/${id}`);
 }))
 

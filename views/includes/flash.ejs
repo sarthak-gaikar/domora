@@ -1,0 +1,22 @@
+<% if (success && success.length) { %>
+<div class="alert custom-alert-success flash-alert">
+    <span><%= success %></span>
+    <button type="button" class="close-btn" onclick="closeAlert(this)">×</button>
+</div>
+<% } %>
+
+<% if (error && error.length) { %>
+<div class="alert custom-alert-error flash-alert">
+    <span><%= error %></span>
+    <button type="button" class="close-btn" onclick="closeAlert(this)">×</button>
+</div>
+<% } %>
+
+<script>
+function closeAlert(btn) {
+    const alert = btn.parentElement;
+    alert.style.opacity = "0";
+    alert.style.transform = "translateX(20px)";
+    setTimeout(() => alert.remove(), 200);
+}
+</script>

@@ -471,3 +471,79 @@ a {
     color: #666 !important;
     padding: 0.5rem !important;
 }
+
+.flash-alert {
+    position: fixed;
+    top: 15px;
+    right: 20px;
+
+    min-width: 230px;
+    max-width: 300px;
+
+    padding: 10px 14px;
+    border-radius: 8px;
+
+    font-size: 0.85rem;
+    font-weight: 500;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    animation: slideIn 0.25s ease-out;
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+
+    z-index: 9999;
+}
+
+/* SUCCESS */
+.custom-alert-success {
+    background: #d1e7dd;
+    border-left: 5px solid #0f5132;
+    color: #0f5132;
+}
+
+/* ERROR */
+.custom-alert-error {
+    background: #f8d7da;
+    border-left: 5px solid #842029;
+    color: #842029;
+}
+
+/* Close button (shared) */
+.close-btn {
+    background: rgba(0,0,0,0.15);
+    color: #000;
+    border: none;
+
+    width: 22px;
+    height: 22px;
+
+    border-radius: 50%;
+    font-size: 16px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.close-btn:hover {
+    background: rgba(0,0,0,0.25);
+}
+
+/* Slide-in animation */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
