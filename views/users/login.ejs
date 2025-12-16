@@ -1,0 +1,14 @@
+<% layout("/layouts/boilerplate.ejs") %>
+<body>
+
+<form method="POST" action="/login" class="listing-form needs-validation" novalidate>
+    <h2>Login</h2>
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+    <button type="submit" class="btn-primary">Login</button>
+</form>
+</body>

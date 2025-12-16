@@ -26,6 +26,18 @@ app.use(session(sessionConfig));
 const flash = require("connect-flash");
 app.use(flash());
 
+// Passport (for authentication)
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const User = require("./models/user.js");
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 // Path
 const path = require("path");
 
@@ -58,6 +70,7 @@ app.use((req, res, next) => {
 // Routes
 const listings = require("./routes/listings.js")
 const reviews = require("./routes/reviews.js")
+const users = require("./routes/users.js")
 
 // ==========================
 // Database Connection
@@ -88,6 +101,9 @@ app.use('/listings', listings);
 
 // Reviews Route
 app.use('/listings/:id/reviews', reviews);
+
+// Users Route
+app.use('/', users);
 
 // ==========================
 // Error Handling Middleware
