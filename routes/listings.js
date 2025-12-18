@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { isLoggedIn } = require("../middleware");
 
 // Utilities
 const wrapAsync = require("../utils/wrapAsync");
@@ -31,12 +32,12 @@ router.get('/', wrapAsync(async (req, res) => {
 }));
 
 // New Route - Form to Create Listing
-router.get('/new', (req, res) => {
+router.get('/new', isLoggedIn, (req, res) => {
     res.render("./listings/new.ejs");
 });
 
 // Create Route - Add Listing
-router.post('/', validateListing, wrapAsync(async (req, res, next) => {
+router.post('/', validateListing, isLoggedIn, wrapAsync(async (req, res, next) => {
     let result = listingSchema.validate(req.body);
     console.log("Validation Result:", result);
     if (result.error) {
@@ -75,7 +76,7 @@ router.get('/:id', wrapAsync(async (req, res) => {
 }));
 
 // Edit Route - Form to Edit Listing
-router.get('/:id/edit', wrapAsync(async (req, res, next) => {
+router.get('/:id/edit', isLoggedIn, wrapAsync(async (req, res, next) => {
     let { id } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -115,7 +116,7 @@ router.put('/:id', validateListing, wrapAsync(async (req, res) => {
 }));
 
 // Delete Route - Remove Listing
-router.delete('/:id', wrapAsync(async (req, res) => {
+router.delete('/:id', isLoggedIn, wrapAsync(async (req, res) => {
     let { id } = req.params;
     const deletedListing = await Listing.findByIdAndDelete(id);
     console.log("Deleted listing:", deletedListing);  

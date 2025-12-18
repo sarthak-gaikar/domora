@@ -21,6 +21,13 @@
     <!-- Right Menu -->
     <div class="right-menu">
         <!-- <span>Become a host</span> -->
+        <% if(!currentUser) { %>
+        <div><a href="/register">Register</a></div>
+        <div><a href="/login">Login</a></div>
+        <% } %>
+        <% if(currentUser) { %>
+        <div><a href="/logout">Logout</a></div>
+        <% } %>  
         <div class="globe-icon"><i class="fa-solid fa-globe"></i></div>
         <div class="menu-icon"><i class="fa-solid fa-bars"></i></div>
     </div>
