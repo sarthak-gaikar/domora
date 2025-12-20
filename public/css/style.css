@@ -472,6 +472,12 @@ a {
     padding: 0.5rem !important;
 }
 
+.login-prompt {
+    font-style: italic !important;
+    color: #666 !important;
+    padding: 0.5rem !important;
+}
+
 .flash-alert {
     position: fixed;
     top: 15px;

@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
+
+// Middleware
 const { isLoggedIn } = require("../middleware");
+const { isOwner } = require("../middleware");
+const { validateListing } = require("../middleware");
 
 // Utilities
 const wrapAsync = require("../utils/wrapAsync");
@@ -11,15 +15,6 @@ const { listingSchema, reviewSchema } = require("../schema.js");
 
 // Models
 const Listing = require("../models/listing");
-
-const validateListing = (req, res, next) => {
-    const { error } = listingSchema.validate(req.body);
-    if (error) {
-        throw new ExpressError(400, error);
-    } else {
-        next();
-    }
-}
 
 // Mongoose
 const mongoose = require("mongoose");
@@ -37,7 +32,7 @@ router.get('/new', isLoggedIn, (req, res) => {
 });
 
 // Create Route - Add Listing
-router.post('/', validateListing, isLoggedIn, wrapAsync(async (req, res, next) => {
+router.post('/', isLoggedIn, isOwner, validateListing, wrapAsync(async (req, res, next) => {
     let result = listingSchema.validate(req.body);
     console.log("Validation Result:", result);
     if (result.error) {
@@ -54,6 +49,7 @@ router.post('/', validateListing, isLoggedIn, wrapAsync(async (req, res, next) =
         country
     });
 
+    newListing.owner = req.user._id; // Associate listing with logged-in user
     console.log('New Listing:', newListing);
     await newListing.save();
     console.log("New listing saved to DB:", newListing);
@@ -65,8 +61,8 @@ router.post('/', validateListing, isLoggedIn, wrapAsync(async (req, res, next) =
 // Show Route - Single Listing
 router.get('/:id', wrapAsync(async (req, res) => {
     let { id } = req.params;
-    const listing = await Listing.findById(id).populate('reviews');
-
+    const listing = await Listing.findById(id).populate({path: 'reviews', populate: {path: 'author'}}).populate('owner');
+    console.log(listing.owner.username);
     if (!listing) {
         req.flash('error', 'Listing not found!');
         return res.redirect('/listings');
@@ -76,7 +72,7 @@ router.get('/:id', wrapAsync(async (req, res) => {
 }));
 
 // Edit Route - Form to Edit Listing
-router.get('/:id/edit', isLoggedIn, wrapAsync(async (req, res, next) => {
+router.get('/:id/edit', isLoggedIn, isOwner, wrapAsync(async (req, res, next) => {
     let { id } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -94,7 +90,7 @@ router.get('/:id/edit', isLoggedIn, wrapAsync(async (req, res, next) => {
 
 
 // Update Route - Apply Edits to Listing
-router.put('/:id', validateListing, wrapAsync(async (req, res) => {
+router.put('/:id' , isLoggedIn, isOwner, validateListing, wrapAsync(async (req, res) => {
     // if (!req.body.listing) {
     //     throw new ExpressError(400, "Invalid Listing Data");
     // }
@@ -116,7 +112,7 @@ router.put('/:id', validateListing, wrapAsync(async (req, res) => {
 }));
 
 // Delete Route - Remove Listing
-router.delete('/:id', isLoggedIn, wrapAsync(async (req, res) => {
+router.delete('/:id', isLoggedIn, isOwner, wrapAsync(async (req, res) => {
     let { id } = req.params;
     const deletedListing = await Listing.findByIdAndDelete(id);
     console.log("Deleted listing:", deletedListing);  

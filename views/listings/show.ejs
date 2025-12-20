@@ -30,45 +30,55 @@
         <div class="listing-header">
             <h4><%= listing.title %></h4>
             <div class="listing-actions">
+                <% if(currentUser && currentUser._id.equals(listing.owner._id)) { %>
                 <a href="/listings/<%=listing._id%>/edit" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
                 <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE" class="delete-form">
                     <button type="submit" class="del-btn"><i class="fa-solid fa-trash-can"></i></button>
                 </form>
+                <% } %>
             </div>
         </div>
 
+        <p>Owned By <i><%= listing.owner.username %></i></p>
         <p class="location"><%= listing.location %></p>
         <img src="<%= listing.image || 'https://via.placeholder.com/800x600.png?text=No+Image' %>" alt="<%= listing.title %>">
         <p class="description"><%= listing.description %></p>
         <p class="price">Price: &#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %> for a night</p>
     </div>
+    <% if(currentUser) {%>
     <div class="rating-form">
         <h3>Leave a Review</h3>
         <form action="/listings/<%= listing._id %>/reviews" method="POST" class="needs-validation" novalidate>
-            <label for="rating">Rating:</label>
-            <input type="range" id="rating" name="rating" min="1" max="5" oninput="this.nextElementSibling.value = this.value">
-            <label for="comment">Comment:</label>
-            <textarea name="comment" rows="4" placeholder="Write your comment here..." required></textarea>
+            <label for="review[rating]">Rating:</label>
+            <input type="range" id="rating" name="review[rating]" min="1" max="5" oninput="this.nextElementSibling.value = this.value">
+            <label for="review[comment]">Comment:</label>
+            <textarea name="review[comment]" rows="4" placeholder="Write your comment here..." required></textarea>
             <button type="submit" class="submit-btn">Submit Review</button>
         </form>
     </div>
+    <% } %>
     <div class="ratings">
         <h3 class="reviews-heading">Reviews</h3>
 <% if (listing.reviews && listing.reviews.length > 0) { %>
     <div class="reviews-grid">
         <% listing.reviews.forEach(review => { %>
             <div class="review-card">
-                <p class="review-user"><b><i>User</i></b></p>
+                <p class="review-user"><b>@<i><%= review.author.username %></i></b></p>
                 <p class="review-rating">Rating: <%= review.rating %>/5</p>
                 <p class="review-comment"><%= review.comment %></p>
                 <p class="review-date">Reviewed on: <%= new Date(review.createdAt).toLocaleDateString() %></p>
+                <% if(currentUser && currentUser._id.equals(review.author._id)) { %>
                 <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"><button class="del-btn">Delete</button></form>
+                <% } %>
             </div>
         <% }) %>
     </div>
 <% } else { %>
     <p class="no-reviews">No reviews yet. Be the first to review!</p>
 <% } %>
+    <% if(!currentUser) {%>
+    <p class="login-prompt">Please <a href="/login"><i>log in</i></a> to leave a review.</p>
+    <% } %>
 
     </div>
 </body>
