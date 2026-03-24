@@ -103,7 +103,7 @@ main()
 
 // Root Route
 app.get('/', (req, res) => {
-    res.send('Root');
+    res.render('home.ejs');
 });
 
 // Listings Route
