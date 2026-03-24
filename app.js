@@ -3,8 +3,9 @@
 // ==========================
 
 // env
-require("dotenv").config();
-// console.log("Environment Variables Loaded:", process.env);
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config();
+}
 
 // Express
 const express = require("express");
@@ -55,10 +56,13 @@ app.use(MethodOverride("_method"));
 
 // Mongoose
 const mongoose = require("mongoose");
-const MONGO_URL = "mongodb://127.0.0.1:27017/domora";
+// const MONGO_URL = "mongodb://127.0.0.1:27017/domora";
+const dbUrl = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/domora";
+
 
 // Static files
 app.use(express.static(path.join(__dirname, "public")));
+app.set("trust proxy", 1);
 
 // EJS-Mate (for layouts/partials)
 const ejsMate = require("ejs-mate");
@@ -82,7 +86,7 @@ const users = require("./routes/users.js")
 // Database Connection
 // ==========================
 async function main() {
-    await mongoose.connect(MONGO_URL);
+    await mongoose.connect(dbUrl);
 }
 
 main()
@@ -122,6 +126,8 @@ app.use((err, req, res, next) => {
 // ==========================
 // Start Server
 // ==========================
-app.listen(8080, () => {
-    console.log("Server is listening on port 8080...");
+const port = process.env.PORT || 8080;
+
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
 });
