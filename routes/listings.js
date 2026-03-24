@@ -24,9 +24,16 @@ const MONGO_URL = "mongodb://127.0.0.1:27017/domora";
 // Controller Functions
 const listingsController = require("../controllers/listings");
 
+// Cloudinary storage configuration
+const { storage } = require("../cloudConfig.js");
+
+// Multer for handling file uploads
+const multer = require("multer");
+const upload = multer({ storage }); // Temporary storage for uploaded files
+
 router.route('/')
     .get(wrapAsync(listingsController.index)) // List all listings
-    .post(isLoggedIn, isOwner, validateListing, wrapAsync(listingsController.createListing)); // Create a new listing
+    .post(isLoggedIn, validateListing, upload.single("image"), wrapAsync(listingsController.createListing)); // Create a new listing
 
 router.route('/new')
     .get(isLoggedIn, listingsController.newListingForm); // Form to create a new listing

@@ -15,38 +15,58 @@ module.exports.newListingForm = (req, res) => {
 };
 
 // Create Route - Add Listing
-module.exports.createListing =async (req, res, next) => {
-    let result = listingSchema.validate(req.body);
-    console.log("Validation Result:", result);
-    if (result.error) {
-        throw new ExpressError(400, result.error);
-    }
 
-    const { title, description, image = {}, price, location, country } = req.body;
+module.exports.createListing = async (req, res, next) => {
+    console.log("CREATE ROUTE HIT");
+    console.log("FILE:", req.file);
+    let url = req.file.secure_url;
+    let filename = req.file.public_id;
+
+    const { title, description, price, location, country } = req.body;
+
     const newListing = new Listing({
         title,
         description,
-        image: typeof image === 'string' ? image : image.url || image, // <-- forces string
+        image: { url, filename },
         price,
         location,
-        country
+        country,
+        owner: req.user._id
     });
 
-    newListing.owner = req.user._id; // Associate listing with logged-in user
-    console.log('New Listing:', newListing);
     await newListing.save();
-    console.log("New listing saved to DB:", newListing);
+
     req.flash('success', 'New listing created successfully!');
-    res.redirect('/listings');
+    res.redirect(`/listings/${newListing._id}`);
 };
 
 // Show Route - Single Listing
+// module.exports.showListing = async (req, res) => {
+//     let { id } = req.params;
+//     const listing = await Listing.findById(id).populate({path: 'reviews', populate: {path: 'author'}}).populate('owner');
+//     console.log(listing.owner.username);
+//     if (!listing) {
+//         req.flash('error', 'Listing not found!');
+//         return res.redirect('/listings');
+//     }
+
+//     res.render("./listings/show.ejs", { listing });
+// };
+
 module.exports.showListing = async (req, res) => {
     let { id } = req.params;
-    const listing = await Listing.findById(id).populate({path: 'reviews', populate: {path: 'author'}}).populate('owner');
-    console.log(listing.owner.username);
+
+    const listing = await Listing.findById(id)
+        .populate({ path: 'reviews', populate: { path: 'author' } })
+        .populate('owner');
+
     if (!listing) {
         req.flash('error', 'Listing not found!');
+        return res.redirect('/listings');
+    }
+
+    if (!listing.owner) {
+        req.flash('error', 'Owner of this listing no longer exists!');
         return res.redirect('/listings');
     }
 

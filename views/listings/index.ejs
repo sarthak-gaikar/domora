@@ -9,7 +9,7 @@
         <a href="/listings/<%=listing._id %>">
         <div class="property-card">
             <div class="card-image">
-                <img src="<%= listing.image %>" alt="Flat in Pune">
+                <img src="<%= typeof listing.image === 'string' ? listing.image : listing.image?.url %>" alt="listing-image">
                 <span class="badge">Popular</span>
                 <button class="wishlist-btn"><i class="fa-regular fa-heart"></i></button>
             </div>

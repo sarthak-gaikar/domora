@@ -30,7 +30,7 @@
         <div class="listing-header">
             <h4><%= listing.title %></h4>
             <div class="listing-actions">
-                <% if(currentUser && currentUser._id.equals(listing.owner._id)) { %>
+                <% if(currentUser && listing.owner && currentUser._id.equals(listing.owner._id)) { %>
                 <a href="/listings/<%=listing._id%>/edit" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
                 <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE" class="delete-form">
                     <button type="submit" class="del-btn"><i class="fa-solid fa-trash-can"></i></button>
@@ -39,9 +39,9 @@
             </div>
         </div>
 
-        <p>Owned By <i><%= listing.owner.username %></i></p>
+        <p>Owned By <i><%= listing.owner ? listing.owner.username : "Deleted User" %></i></p>
         <p class="location"><%= listing.location %></p>
-        <img src="<%= listing.image || 'https://via.placeholder.com/800x600.png?text=No+Image' %>" alt="<%= listing.title %>">
+        <img src="<%= listing.image?.url || 'https://via.placeholder.com/800x600.png?text=No+Image' %>" alt="<%= listing.title %>">
         <p class="description"><%= listing.description %></p>
         <p class="price">Price: &#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %> for a night</p>
     </div>

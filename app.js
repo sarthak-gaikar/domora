@@ -2,6 +2,10 @@
 // Import Dependencies
 // ==========================
 
+// env
+require("dotenv").config();
+// console.log("Environment Variables Loaded:", process.env);
+
 // Express
 const express = require("express");
 const app = express();
