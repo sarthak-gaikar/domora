@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 // Express-Session
 const session = require("express-session");
 const sessionConfig = {
-    secret: "secret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
