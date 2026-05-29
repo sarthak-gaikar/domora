@@ -1,8 +1,9 @@
+require("dotenv").config({ path: "../.env" });
 const mongoose = require("mongoose");
 const initData = require("./data"); // your data.js
 const Listing = require("../models/listing.js");
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/domora";
+const dbUrl = process.env.MONGO_URL;
 
 // 🔥 Connect to DB
 main()
@@ -16,7 +17,7 @@ main()
 
 // DB connection function
 async function main() {
-    await mongoose.connect(MONGO_URL);
+    await mongoose.connect(dbUrl);
 }
 
 // 🔥 IMPORTANT: Use proper ObjectId
